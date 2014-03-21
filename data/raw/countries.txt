@@ -1,0 +1,181 @@
+AC Antigua and Barbuda 
+AE United Arab Emirates 
+AF Afghanistan
+AG Algeria 
+AJ Azerbaijan 
+AL Albania
+AM Armenia 
+AO Angola 
+AQ American Samoa [United States] 
+AR Argentina 
+AS Australia 
+AU Austria 
+AY Antarctica 
+BA Bahrain 
+BB Barbados 
+BC Botswana 
+BD Bermuda [United Kingdom] 
+BE Belgium 
+BF Bahamas, The 
+BK Bosnia and Herzegovina 
+BL Bolivia 
+BN Benin 
+BO Belarus 
+BP Solomon Islands 
+BR Brazil 
+BY Burundi
+CA Canada 
+CD Chad 
+CE Sri Lanka 
+CF Congo (Brazzaville) 
+CH China  
+CI Chile 
+CJ Cayman Islands [United Kingdom] 
+CK Cocos (Keeling) Islands [Australia] 
+CM Cameroon 
+CO Colombia 
+CQ Northern Mariana Islands [United States] 
+CS Costa Rica 
+CT Central African Republic 
+CU Cuba 
+CY Cyprus 
+DA Denmark 
+DR Dominican Republic 
+EC Ecuador 
+EG Egypt 
+EI Ireland 
+EN Estonia 
+ER Eritrea 
+ES El Salvador 
+ET Ethiopia 
+EZ Czech Republic 
+FG French Guiana [France] 
+FI Finland 
+FJ Fiji 
+FM Federated States of Micronesia 
+FP French Polynesia 
+FR France 
+FS French Southern and Antarctic Lands [France] 
+GB Gabon 
+GG Georgia 
+GL Greenland [Denmark] 
+GM Germany 
+GP Guadeloupe [France] 
+GQ Guam [United States] 
+GR Greece 
+GT Guatemala 
+GV Guinea 
+GY Guyana 
+HO Honduras 
+HR Croatia
+HU Hungary 
+IC Iceland 
+ID Indonesia 
+IN India 
+IO British Indian Ocean Territory [United Kingdom] 
+IR Iran 
+IS Israel 
+IT Italy 
+IV Cote D'Ivoire 
+IZ Iraq 
+JA Japan 
+JM Jamaica 
+JN Jan Mayen [Norway] 
+JQ Johnston Atoll [United States] 
+KE Kenya 
+KG Kyrgyzstan 
+KN Korea, North 
+KR Kiribati 
+KS Korea, South 
+KT Christmas Island [Australia] 
+KU Kuwait 
+KZ Kazakhstan 
+LA Laos 
+LE Lebanon
+LG Latvia 
+LH Lithuania 
+LO Slovakia 
+LQ Palmyra Atoll [United States] 
+LT Lesotho 
+LU Luxembourg 
+LY Libya 
+MA Madagascar 
+MD Moldova 
+MG Mongolia 
+MI Malawi 
+MK Macedonia 
+ML Mali 
+MO Morocco 
+MP Mauritius 
+MQ Midway Islands [United States} 
+MR Mauritania 
+MT Malta 
+MU Oman 
+MV Maldives 
+MX Mexico 
+MY Malaysia 
+MZ Mozambique 
+NC New Caledonia [France] 
+NG Niger 
+NH Vanuatu 
+NL Netherlands 
+NO Norway 
+NP Nepal 
+NU Nicaragua 
+NZ New Zealand 
+PA Paraguay 
+PC Pitcairn Islands [United Kingdom] 
+PE Peru 
+PK Pakistan 
+PL Poland 
+PM Panama 
+PO Portugal 
+PP Papua New Guinea 
+PS Palau 
+RI Serbia
+RM Marshall Islands 
+RO Romania 
+RP Philippines 
+RQ Puerto Rico [United States] 
+RS Russia 
+SA Saudi Arabia 
+SE Seychelles 
+SF South Africa 
+SG Senegal 
+SH Saint Helena [United Kingdom] 
+SI Slovenia 
+SL Sierra Leone 
+SP Spain 
+ST Saint Lucia 
+SU Sudan 
+SV Svalbard [Norway] 
+SW Sweden 
+SY Syria 
+SZ Switzerland 
+TD Trinidad and Tobago 
+TH Thailand 
+TI Tajikistan 
+TL Tokelau [New Zealand] 
+TN Tonga 
+TO Togo 
+TS Tunisia 
+TU Turkey 
+TV Tuvalu 
+TX Turkmenistan 
+TZ Tanzania 
+UG Uganda
+UK United Kingdom 
+UP Ukraine 
+US United States 
+UV Burkina Faso 
+UY Uruguay 
+UZ Uzbekistan 
+VE Venezuela 
+VM Vietnam 
+VQ Virgin Islands [United States] 
+WA Namibia 
+WF Wallis and Futuna [France] 
+WQ Wake Island [United States]
+WZ Swaziland 
+ZA Zambia 
+ZI Zimbabwe 

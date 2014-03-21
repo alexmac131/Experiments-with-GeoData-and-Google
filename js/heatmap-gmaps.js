@@ -14,8 +14,8 @@ function HeatmapOverlay(map, cfg){
     me.latlngs = [];
     me.bounds = null;
     me.setMap(map);
-  
-  //google.maps.event.addListener(map, 'idle', function() { me.draw() });
+  console.log("\noverlay\n");
+  google.maps.event.addListener(map, 'idle', function() { me.draw() });
 }
 
 HeatmapOverlay.prototype = new google.maps.OverlayView();
@@ -31,6 +31,7 @@ HeatmapOverlay.prototype.onAdd = function(){
     	
     this.conf.element = el;
     panes.overlayLayer.appendChild(el);
+    console.log("\n On Add \n");
 
     this.heatmap = h337.create(this.conf);
 }
@@ -93,11 +94,17 @@ HeatmapOverlay.prototype.draw = function(){
         }
         this.heatmap.store.setDataSet(d);
     }
+    console.log("\n Draw \n");
 }
 
 HeatmapOverlay.prototype.pixelTransform = function(p){
-    var w = this.heatmap.get("width"),
-        h = this.heatmap.get("height");
+   // console.log(p);
+   // console.log(this);
+   // console.log("enter to hell");
+    var w = heatmap.get("width"), h = heatmap.get("height");
+
+    //var w = this.heatmapOverlay.getWidth(), h = this.heatmapOverlay.getHeight();
+//console.log("pixel survial" + w  + " h " + h); 
 
     while(p.x < 0){
     	p.x+=w;
@@ -117,12 +124,13 @@ HeatmapOverlay.prototype.pixelTransform = function(p){
 
     p.x = (p.x >> 0);
     p.y = (p.y >> 0);
-	
+	console.log("Pixel  transform");
     return p;
 }
 
 HeatmapOverlay.prototype.setDataSet = function(data){
 
+   // console.log("all good men");
     var me = this,
         currentBounds = me.map.getBounds(),
         mapdata = {
@@ -135,20 +143,32 @@ HeatmapOverlay.prototype.setDataSet = function(data){
         latlng, point;
 
     me.latlngs = [];
-   
+    console.log(me);
+//console.log("die here");
     while(dlen--){	
+        //console.log("over and over" + dlen);
     	latlng = new google.maps.LatLng(d[dlen].lat, d[dlen].lng);
         
+        //console.log("latlng" + latlng);
+
         if(!currentBounds.contains(latlng)) { 
             continue; 
         }
-
+        //console.log("survial");
     	me.latlngs.push({latlng: latlng, c: d[dlen].count});
+        /*console.log("survial is");
+        console.log ("the test" + projection.fromLatLngToDivPixel(latlng));
+        console.log("who am i");
+        console.log(me);
+        console.log(this);
+        console.log("\n\n"); */
     	point = me.pixelTransform(projection.fromLatLngToDivPixel(latlng));
+        //console.log("survial is a good thing");
     	mapdata.data.push({x: point.x, y: point.y, count: d[dlen].count});
+        //console.log("repeats");
     }
-    me.heatmap.clear();
-    me.heatmap.store.setDataSet(mapdata);
+    //this.heatmap.clear();
+    //me.heatmap.store.setDataSet(mapdata);
 }
 
 HeatmapOverlay.prototype.addDataPoint = function(lat, lng, count){

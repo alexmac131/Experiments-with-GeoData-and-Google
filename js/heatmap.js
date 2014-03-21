@@ -29,6 +29,7 @@
         this.get = function(key){
             return _[key];
         };
+        console.log(" store -- > ");
         this.set = function(key, value){
             _[key] = value;
         };
@@ -62,6 +63,7 @@
                 me.setDataSet({ max: data[x][y], data: data }, true);
                 return;
             }
+            console.log (" --> add point");
             heatmap.drawAlpha(x, y, data[x][y], true);
         },
         setDataSet: function(obj, internal){
@@ -101,6 +103,7 @@
                     data[point.x][point.y] = point.count;
                 }
             }
+            console.log( "  ---> setDataSet");
             heatmap.colorize();
             this.set("data", d);
         },
@@ -120,7 +123,7 @@
                     exportData.push({x: parseInt(one, 10), y: parseInt(two, 10), count: data[one][two]});
                 }
             }
-
+            console.log( "  ---> exporeDataset ");
             return { max: me.max, data: exportData };
         },
         generateRandomDataSet: function(points){
@@ -135,6 +138,7 @@
                 data.push({x: Math.floor(Math.random()*w+1), y: Math.floor(Math.random()*h+1), count: Math.floor(Math.random()*max+1)});
             }
             randomset.data = data;
+            console.log( "  ---> generateRandomDataSet");
             this.setDataSet(randomset);
         }
     };
@@ -154,6 +158,7 @@
         this.set = function(key, value){
             _[key] = value;
         };
+        console.log( "  ---> legend");
         this.init();
     };
     legend.prototype = {
@@ -202,7 +207,7 @@
             
             me.set("element", element);
             me.set("labelsEl", labelsEl);
-
+            console.log( "  ---> legend");
             me.update(1);
         },
         processGradientObject: function(){
@@ -220,7 +225,7 @@
                 return (a.stop - b.stop);
             });
             gradientArr.unshift({ stop: 0, value: 'rgba(0,0,0,0)' });
-
+console.log( "  ---> processGradientObject");
             me.set("gradientArr", gradientArr);
         },
         createGradientImage: function(){
@@ -258,7 +263,7 @@
 
             // we re-use the context for measuring the legends label widths
             me.set("ctx", ctx);
-
+console.log( "  ---> createGradientImage");
             return canvas.toDataURL();
         },
         getElement: function(){
@@ -284,6 +289,7 @@
                 }
                 labelsHtml += '<li style="position:absolute;left:'+(((((1/(gradient.length-1)*i*256) || 0)) >> 0)-offset+.5)+'px">'+labelText+'</li>';
             }       
+            console.log( "  ---> update");
             labels.innerHTML = labelsHtml;
         }
     };
@@ -324,6 +330,7 @@
         this.set = function(key, value){
             _[key] = value;
         };
+        console.log( "  ---> heatmap constructor    ");
         // configure the heatmap when an instance gets created
         this.configure(config);
         // and initialize it
@@ -431,6 +438,9 @@
             me.set("gradient", ctx.getImageData(0,0,1,256).data);
         },
         getWidth: function(element){
+            //console.log ("beer");
+            //console.log(this);
+            //console.log(element);
             var width = element.offsetWidth;
             if(element.style.paddingLeft){
                 width+=element.style.paddingLeft;
@@ -543,6 +553,7 @@
                 }
                 // the rgb data manipulation didn't affect the ImageData object(defined on the top)
                 // after the manipulation process we have to set the manipulated data to the ImageData object
+                console.log( "  ---> color");
                 image.data = imageData;
                 ctx.putImageData(image, left, top);
         },
@@ -609,6 +620,7 @@
             me.store.set("data",[]);
             // @TODO: reset stores max to 1
             //me.store.max = 1;
+            console.log( "  --->  clear ");
             me.get("ctx").clearRect(0,0,w,h);
             me.get("actx").clearRect(0,0,w,h);
         },
@@ -650,4 +662,6 @@
         };
     })();
     w.h337 = w.heatmapFactory = heatmapFactory;
+    console.log("what is w");
+    console.log(w);
 })(window);

@@ -1,0 +1,124 @@
+<!DOCTYPE html>  
+<html>
+<head>
+ <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="css/prettify.css" rel="stylesheet">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script 
+src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDY0kkJiTPVd2U7aTOAwhc9ySH6oHxOIYM&sensor=false" > </script>
+
+
+
+<script src="js/jquery.js"></script>
+<script src="js/heatmap.js"></script>
+
+<script src="js/heatmap-gmaps.js"></script>
+
+
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+                 <div id="heatmapArea" 
+ class="well" style="width:1110px;padding:0;height:900px;cursor:pointer;position:relative;">
+
+                        </div>
+
+
+
+<script>
+
+var map;
+var center;
+var sw;
+var ne;
+var myOptions;
+var heatmap;
+
+function initialize() {
+  center = new google.maps.LatLng(40 , -100);
+  //sw = new google.maps.LatLng(0 ,-120);
+  //  ne = new google.maps.LatLng(35, -70);
+  myOptions = {        
+    disableDefaultUI: false,
+    center: center,
+
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    zoom: 3,
+    draggable: true,
+    streetViewControl: false,
+    disableDoubleClickZoom: true                               
+  };
+
+
+  map = new google.maps.Map($("#heatmapArea")[0], myOptions);
+  //map = new google.maps.Map(document.getElementById("heatmapArea"), myOptions);
+  
+  console.log("ssssssss");
+  heatmap = new HeatmapOverlay(map, {"radius":150, "visible":true, "opacity":100, "offsetWidth":10}); 
+console.log("ssssssss");
+
+google.maps.event.addListener(map, 'click', function(event) {
+    console.log("dragged");
+    var bounds = map.getBounds();
+    console.log(bounds); 
+    console.log("dragged");
+  
+});
+
+
+google.maps.event.addListenerOnce(map, "idle", function(){
+    // this is important, because if you set the data set too early, the latlng/pixel projection doesn't work
+    console.log("we are idle");
+    showData();
+    console.log("done idle"); 
+});
+
+console.log ("done init");
+
+}
+function showData(){  
+	$.ajax({
+    dataType: "json",
+    url: "data/canada.json",
+    complete: function (data) {
+      console.log("show me the money");
+		  infoArray = JSON.parse(data.responseText);
+      console.log(infoArray);
+      heatmap = new HeatmapOverlay(map, {"radius":5, "visible":true, "opacity":60});
+      console.log("show me the money  ==========");
+      
+      heatmap.setDataSet(infoArray);
+      console.log("show me the money !!!!!!");
+      
+    },
+
+    success: function(data) {
+      console.log("we have succcess");
+    },
+    error: function () {
+      console.log("bad shit man");
+    }
+  });
+};
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+
+	
+</script>
+</head>
+<body>
+
+
+
+<div id="heatmapArea" style="width:1100px; height:900px" />
+</body>
+</html>
