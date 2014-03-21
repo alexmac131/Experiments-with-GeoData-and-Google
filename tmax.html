@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <!--[if IE]><script type="text/javascript" src="js/excanvas.js"></script><![endif]-->
+    <script type="text/javascript" src='js/jquery.js'></script>
+    <script type="text/javascript" src='js/SurfacePlot.js'></script>
+    <script type="text/javascript" src='js/ColourGradient.js'></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+
+    <title>SurfacePlot test stub</title>
+        
+  </head>
+  <body>
+        
+    <script type='text/javascript'>
+            
+      google.load("visualization", "1");
+      loaddata();
+
+     var dataSet ;
+      function loaddata () {
+        $.ajax({
+          dataType: "json",
+          url: "data/maxT.json",
+
+          complete: function (data) {
+           dataSet = JSON.parse(data.responseText);
+           google.setOnLoadCallback(setUp);
+          },
+          error: function () {
+            console.log("bad shit man");
+          }
+        });
+      }
+     function setUp() {
+          var numRows = dataSet.length;
+          var numCols = 99;
+                
+          var tooltipStrings = new Array();
+          var data = new google.visualization.DataTable();
+        
+          for (var i = 0; i < numCols; i++){
+            data.addColumn('number', 'col'+i);
+          }     
+          data.addRows(numRows);
+          var d = 360 / numRows;
+          var idx = 0;
+          var c = 1;
+          console.log(dataSet.length);
+          console.log(dataSet[4]);
+          
+                
+          for (var i = 0; i < numRows; i++) 
+          {
+            for (var j = 0; j < numCols; j++)
+            {
+              //var value = (Math.cos(i * d * Math.PI / 180.0) * Math.cos(j * d * Math.PI / 180.0));
+              c = c + 5;
+              valueTemp = dataSet[j].temp;
+              console.log (" aaaa " + valueTemp);
+              //value = Math.floor((Math.random()*200)+1);
+              data.setValue(i, j, valueTemp/ 101);
+              tooltipStrings[idx] = "x:" + i + ", y:" + j + " = " + valueTemp ;
+              idx++;
+            }
+          }
+
+         var surfacePlot = new greg.ross.visualisation.SurfacePlot(document.getElementById("surfacePlotDiv"));
+
+         // Don't fill polygons in IE. It's too slow.
+         var fillPly = true;
+
+         // Define a colour gradient.
+         var colour1 = {red:0, green:0, blue:255};
+         var colour2 = {red:0, green:255, blue:255};
+         var colour3 = {red:0, green:255, blue:0};
+         var colour4 = {red:255, green:255, blue:0};
+         var colour5 = {red:255, green:0, blue:0};
+         var colours = [colour1, colour2, colour3, colour4, colour5];
+
+         // Axis labels.
+         var xAxisHeader = "X";
+         var yAxisHeader = "Y";
+         var zAxisHeader = "Z";
+
+         var options = {xPos: 365, yPos: 100, width: 500, height: 500, colourGradient: colours,
+           fillPolygons: fillPly, tooltips: tooltipStrings, xTitle: xAxisHeader,
+           yTitle: yAxisHeader, zTitle: zAxisHeader, restrictXRotation: false};
+                
+        surfacePlot.draw(data, options);
+
+
+    
+
+  }     
+      </script>
+        
+      <div id='surfacePlotDiv'>
+        <!-- SurfacePlot goes here... -->
+            
+      </div>
+        
+    </body>
+</html>
