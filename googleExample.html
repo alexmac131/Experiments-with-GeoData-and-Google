@@ -161,15 +161,29 @@ function changeCenter() {
     case "EU":
       toggleHeatmap();
       console.log("beep beep eu" );
-      map.setCenter({lat:58, lng: 15});
+      map.setCenter({lat:45, lng: 15});
       map.setZoom(4) ;
       toggleHeatmap();
       break;
+    case "JP":
+      toggleHeatmap();
+      console.log("beep beep eu" );
+      map.setCenter({lat:33, lng: 145});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;  
     case "AU":
       toggleHeatmap(); 
       console.log("beep beep AU" );   
       map.setZoom(4) ;
       map.setCenter({lat: -30, lng: 133});
+      toggleHeatmap();
+      break;
+    case "VE":
+      toggleHeatmap(); 
+      console.log("beep beep AU" );   
+      map.setZoom(5) ;
+      map.setCenter({lat:12, lng: 113});
       toggleHeatmap();
       break;
     case "PC":
@@ -226,6 +240,8 @@ function changeCenter() {
       <option value="RU">Russia</option> 
       <option value="ID">India</option>     
       <option value="CH">China</option>
+      <option value="JP">Japan</option>
+       <option value="VE">Indo-China</option>
       <option value="ME">Middle East</option>
       <option value="AF">Africa</option>
       <option value="AU">Austrailia</option>
