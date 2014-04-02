@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    #beer {
+        top:1;
+        left:99%;
+    }
+   
+    #map-canvas {
+      padding: 0px;
+      font: inherit;
+      width:1100px; height:620px;
+    }
+    
+  </style>
+
+  <script src="js/jquery.js"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+
+<script>
+    var map, pointarray, heatmap,stationArray, position, bounds;
+     var taxiData = [];
+
+     var baseTemp = 26;
+
+    
+   
+
+  function initialize() {
+    var mapOptions = {
+      zoom: 5,
+      maxZoom:9,
+      minZoom:3,
+      streetViewControl:false,
+      panControl:false,
+      styles: [{  visibility: "simplified" }],
+      center: new google.maps.LatLng(44.774546, -98.433523),
+     mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    };
+
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+    var styles = [
+    {
+      stylers: [
+        { visibility: "simplified" }
+      ]
+    }
+    ,{
+      featureType: "all",
+      elementType: "all",
+      stylers: [
+        { visibility: "off" }
+      ]
+    }
+    ,{
+      featureType: "landscape.natural",
+      elementType: "all",
+      stylers: [
+        { visibility: "simplified" }
+      ]
+    }
+    ,{
+      featureType: "water",
+      elementType: "all",
+      stylers: [
+        { visibility: "simplified" }
+      ]
+    }
+
+
+
+     ];
+
+  // Create a new StyledMapType object, passing it the array of styles,
+  // as well as the name to be displayed on the map type control.
+  var styledMap = new google.maps.StyledMapType(styles,
+    {name: "Styled Map"});
+
+  // Create a map object, and include the MapTypeId to add
+  // to the map type control.
+  
+ 
+  //Associate the styled map with the MapTypeId and set it to display.
+  map.mapTypes.set('map_style', styledMap);
+  map.setMapTypeId('map_style');
+   
+    $.ajax({
+      dataType: "json",
+      cache: false,
+      url: "data/stations.json",
+
+      complete: function (data) {
+        stationArray = JSON.parse(data.responseText);
+        console.log ("station data loaded " + stationArray.length);
+      },
+      success: function(data) {
+      //console.log("we have succcess loading the station json ");  
+      },
+      error: function () {
+        console.log("Unable to load the stations Json file ");
+      }
+    });
+
+    $.ajax({
+      dataType: "json",
+      cache: false,
+      url: "data/2014.json",
+      complete: function (data) {
+        var minT = 1000;
+        var maxT = -1000;
+
+        //console.log("we /have complete temperature data");
+        infoArray = JSON.parse(data.responseText);
+        console.log ("The measurements total " + infoArray.length  );
+        var infoStruct = infoArray.filter(getDateData, { date :20140131});
+        bounds = map.getBounds();
+        for (var i = 0; i < infoStruct[0].data.length; i ++) {
+          position =new google.maps.LatLng(
+          stationArray[infoStruct[0].data[i].station].lat,
+          stationArray[infoStruct[0].data[i].station].lng);
+          var stateOf = bounds.contains(position);
+          if (stateOf === false) {
+            continue;
+          }
+          infoStruct[0].data[i].TMAX = parseInt (infoStruct[0].data[i].TMAX / 10) + baseTemp;
+          if (infoStruct[0].data[i].TMAX > maxT ) {
+              maxT = infoStruct[0].data[i].TMAX;
+          }
+          if (infoStruct[0].data[i].TMAX < minT) {
+            minT = infoStruct[0].data[i].TMAX;
+          }
+          taxiData.push({location: position, weight: infoStruct[0].data[i].TMAX});
+        }
+        console.log ("maxT " + maxT);
+        console.log ("minT " + minT);
+        console.log("drawing data " + taxiData.length);
+        drawData();
+
+        console.log("data loading complete.");
+      },
+      success: function(data) {
+        //console.log("we have succcess");
+      },
+      error: function () {
+        console.log("bad shit man");
+      }
+    });
+
+
+}  
+function drawData () {
+  
+
+  var gradient = [];
+  gradient.push('rgba(0, 0, 111, 0)');
+  var blue;
+  var green;
+  var red;
+  var count = -baseTemp;
+  for (var rgb = 1; rgb <= 4 ;rgb++) {
+    for (var i =1 ; i < 255 ; i += 5) {
+      count++;
+      switch (rgb) {
+            case 1:
+              red = 10;
+              green = parseInt(i/4);
+              blue = 40 + i ;
+              if (blue > 254) {     
+                rgb++;
+                i = 1;
+                continue;
+              }
+              if (count > 14) {
+                rgb++;
+                i = 1;
+                continue;
+              }
+              i += 4;
+              break;
+            case 2:
+              red = 10+ i;
+              green = 70  +i;
+              if (green >= 255) {
+                green = 255;
+              }
+              blue = 220 - parseInt(i/3);
+              if (blue <= 0) {
+                blue = 1;
+              }
+              i += 5;
+              if (count > 20) {
+                rgb++;
+                i = 1;
+                continue;
+              }
+              break;
+            case 3:
+              red = 220;
+              green = 205 - parseInt(i/3);
+              blue = parseInt(i/8);
+              if (count > 30) {
+                rgb++;
+                i = 1;
+                continue;
+              }
+              i += 19;
+              break;
+
+            case 4:
+              red = 255 ;
+              green = 135  -  parseInt(i/2);
+              if (green <= 0) {
+                green = 0;
+              }
+              if(count > 50) {
+                rgb++;
+                i = 1;
+                continue;
+              }
+              i += 7;
+              blue = 0;
+              break;
+            default:
+              //console.log("default"); 
+        }
+        if (rgb <= 4) {
+          gradient.push('rgba('+  red + ',' +  green + ' ,' + blue + ',1)'); 
+         
+         var inset = "<div id=\"beer\" style=\"background-color:rgb(" + red + "," + green + "," + blue + ");width:15px;height:10px;left:99%;top:1;float:left\"></div>";
+         // console.log (inset);
+          
+            $("#scale").append(inset);
+         
+         
+        }
+      }
+  }
+  console.log("terminal points " + taxiData.length) 
+  console.log("colors " + gradient.length);
+  for (var city in taxiData) {
+    var populationOptions = {
+      strokeColor: gradient[taxiData[city].weight],
+      strokeOpacity: 0.19,
+      strokeWeight: 1,
+      fillColor: gradient[taxiData[city].weight],
+      fillOpacity: 0.59,
+      map: map,
+      center: taxiData[city].location,
+      radius: 33000
+    };
+    // Add the circle for this city to the map.
+    cityCircle = new google.maps.Circle(populationOptions);
+  }
+}
+ 
+
+
+
+function getDateData(value, index, array1) {   
+    if (array1[index].date == this.date) {
+      return array1[index].data;
+    }
+} 
+
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+  </head>
+  <body>
+    
+   <div> 
+    <div id="map-canvas" ></div>
+    <div id="scale"></div>
+  </div>
+  </body>
+</html>

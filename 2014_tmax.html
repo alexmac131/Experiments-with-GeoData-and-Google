@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    html, body {  
+      margin: 0px;
+      padding: 0px;
+      font-family : 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.1em;
+    }
+    #datepicker {
+	top:45;
+	right:1;
+	z-index:4;
+	position:fixed;
+    }
+    #map-canvas {
+      text-align: center;
+      padding: 0px;
+      font: inherit;
+    }
+    button  {
+     width:240;
+     font: inherit;
+    }
+    select {
+      text-align: center;
+      font: inherit;
+    }
+    .panel {
+      text-align: center;
+      font: inherit;
+      font-size:.9em ;  
+      top: 5px;        
+      z-index: 5;
+      background-color: #000;
+      padding: 0px;
+      border: 1px solid #000;
+    }
+  </style>
+
+  <script src="js/jquery.js"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+
+  <script>
+    var map, pointarray, heatmap,stationArray, position, bounds;
+     var taxiData = [];
+   
+
+    function initialize() {
+      var mapOptions = {
+        zoom: 7,
+        maxZoom:9,
+        minZoom:6,
+        streetViewControl:false,
+        panControl:false,
+        center: new google.maps.LatLng(44.774546, -80.433523),
+        mapTypeId: google.maps.MapTypeId.TERRAN
+      };
+
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+   
+  $.ajax({
+    dataType: "json",
+    cache: false,
+    url: "data/stations.json",
+    complete: function (data) {
+   
+      stationArray = JSON.parse(data.responseText);
+      
+      //console.log("we have complete stations");
+    },
+
+    success: function(data) {
+      //console.log("we have succcess loading the station json ");
+        
+    },
+    error: function () {
+      //console.log("Unable to load the stations Json file ");
+    }
+  });
+
+  $.ajax({
+    dataType: "json",
+    cache: false,
+    url: "data/2014.json",
+    complete: function (data) {
+      var minT = 0;
+      var maxT = 0;
+      //console.log("we /have complete temperature data");
+      infoArray = JSON.parse(data.responseText);
+      var infoStruct = infoArray.filter(getDateData, "20140227");
+      bounds = map.getBounds();
+       for (var i = 0; i < infoStruct[0].data.length; i ++) {
+         position =new google.maps.LatLng(
+          stationArray[infoStruct[0].data[i].station].lat,
+          stationArray[infoStruct[0].data[i].station].lng);
+        var stateOf = bounds.contains(position);
+        if (stateOf === false) {
+          console.log("reject");  
+          continue;
+        }
+        taxiData.push({location: position, weight: ((infoStruct[0].data[i].TMAX + 1000)/100)});
+        if (infoStruct[0].data[i].TMAX +1000  < minT) {
+          minT = infoStruct[0].data[i].TMAX + 1000;
+        }
+        else if (infoStruct[0].data[i].TMAX +1000 > maxT) {
+          maxT = infoStruct[0].data[i].TMAX +1000 ;
+        }
+        else {
+          // no action
+        }
+        //console.log(taxiData[i]);
+      }
+      console.log ("Max temp " + maxT);
+      console.log ("Min temp " + minT);
+      //console.log("data loading complete");
+    },
+
+    success: function(data) {
+      //console.log("we have succcess");
+        
+    },
+    error: function () {
+      //console.log("bad shit man");
+    }
+  });
+
+  
+
+  var pointArray = new google.maps.MVCArray(taxiData);
+
+  
+heatmap = new google.maps.visualization.HeatmapLayer({
+    data: pointArray,
+    maxIntensity: 300,
+    opacity:.72,
+    radius:5,
+    dissipating: false
+  });
+  var gradient = [];
+  gradient.push('rgba(0, 0, 111, 0)');
+  var blue;
+  var green;
+  var red;
+  var count = 0;
+  for (var rgb = 1; rgb <= 6 ;rgb++) {
+    for (var i =1 ; i < 255 ; i += 12) {
+      count++;
+      switch (rgb) {
+            case 1:
+              red = 0;
+              green = parseInt(i/8);
+              blue = 128 +i;
+              if (blue > 210) {     
+                  continue;
+              }
+              break;
+            case 2:
+              red = 10;
+              green = i;
+              if (green > 210) {
+                continue;
+              }
+              blue = 210 - parseInt(i /3);
+              break;
+            case 3:
+              red = 12 + parseInt(i/3);
+              green = 209 - parseInt(i  /5);
+              if (green <= 0) {
+                green = 1;
+                continue;
+              }
+              blue = 100 - parseInt(i / rgb) + 4 ;
+              break;
+            case 4:
+              red = 100+ parseInt(i/2);
+              green = 139  +i;
+              if (green >= 255) {
+                green = 255;
+              }
+              blue = 20 - parseInt(i/3);
+              if (blue <= 0) {
+                blue =1;
+              }
+              break;
+            case 5:
+              red = 255;
+              green = 255 - parseInt(i/4);
+              blue = parseInt(i/10);
+              break;
+            case 6:
+              red = 255 ;
+              green = 189 -  i;;
+              if (green <= 0) {
+                green = 0;
+                continue;
+              }
+              blue = 0;
+              break;
+        }
+        gradient.push('rgba('+  red + ',' +  green + ' ,' + blue + ',10)');            
+      }
+  }
+  //console.log("data out end");
+  //console.log(gradient.length);
+  heatmap.set('gradient', gradient);
+  heatmap.setMap(map);
+  toggleHeatmap();
+  toggleHeatmap();
+}
+
+
+function getDateData(value, index, array1) {
+    
+    if (array1[index].date == "20140207") {
+      return array1[index].data;
+    }
+} 
+
+
+
+function toggleHeatmap() {
+  heatmap.setMap(heatmap.getMap() ? null : map);
+}
+
+
+
+
+
+function changeCenter() {
+  var continent = $("#areaMap option:selected").val();
+
+  switch (continent) {
+    case "CA":
+      toggleHeatmap();
+      map.setCenter({lat: 59, lng: -93});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break; 
+
+    case "AF":
+      toggleHeatmap();
+      console.log("beep beep af" );
+      map.setCenter({lat: -5, lng: 30});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break; 
+    case "NA":
+      toggleHeatmap();
+      console.log("beep beep na" ); 
+      map.setCenter({lat:  43.774546, lng: -80.4});
+      map.setZoom(5) ;
+       var Map = heatmap.getData();
+      console.log("map data");
+      console.log(Map);
+      toggleHeatmap();
+      break;
+    case "SA":
+      toggleHeatmap();
+      console.log("beep beep sa" ); 
+      map.setCenter({lat: -26, lng: -65});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      var Map = map.getBounds();
+      console.log("map data");
+      console.log(Map);
+      break;
+    case "EU":
+      toggleHeatmap();
+      console.log("beep beep eu" );
+      map.setCenter({lat:45, lng: 15});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      heatmap.setMap(map);
+      var Map = heatmap.getData();
+      console.log("map data");
+      console.log(Map);
+      break;
+    case "JP":
+      toggleHeatmap();
+      console.log("beep beep eu" );
+      map.setCenter({lat:33, lng: 145});
+      map.setZoom(5) ;
+      toggleHeatmap();
+        var Map = heatmap.getData();
+      console.log("map data");
+      console.log(Map);
+      break;  
+    case "AU":
+      toggleHeatmap(); 
+      console.log("beep beep AU" );   
+      map.setZoom(4) ;
+      map.setCenter({lat: -30, lng: 133});
+      toggleHeatmap();
+        var Map = heatmap.getData();
+      console.log("map data");
+      console.log(Map);
+      break;
+    case "VE":
+      toggleHeatmap(); 
+      console.log("beep beep AU" );   
+      map.setZoom(5) ;
+      map.setCenter({lat:12, lng: 113});
+      toggleHeatmap();
+      break;
+    case "PC":
+      toggleHeatmap(); 
+      console.log("beep beep pc" );   
+      map.setZoom(4) ;
+      map.setCenter({lat: 1, lng: -160});
+      toggleHeatmap();
+      break;
+    case "RU":
+      toggleHeatmap();
+      console.log("beep beep ru" ); 
+      map.setCenter({lat:55, lng: 67});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "CH":
+      toggleHeatmap();
+      console.log("beep beep Ch" ); 
+      map.setCenter({lat: 38, lng: 110});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "ID":
+      toggleHeatmap();
+      console.log("beep beep ME" ); 
+      map.setCenter({lat: 20, lng: 88});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;
+    case "ME":
+      toggleHeatmap();
+      console.log("beep beep ME" ); 
+      map.setCenter({lat: 25, lng: 33});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;
+    default:
+      console.log("bad karma");
+
+  }
+
+      
+ 
+}
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+  </head>
+  <body>
+    
+    <div  class="panel"><select  id = "areaMap" onchange="changeCenter()" >
+      <option value="NA">North America</option>
+      <option value="SA">South America</option>
+      <option value="EU">Europe</option>
+      <option value="RU">Russia</option> 
+      <option value="ID">India</option>     
+      <option value="CH">China</option>
+      <option value="JP">Japan</option>
+       <option value="VE">Indo-China</option>
+      <option value="ME">Middle East</option>
+      <option value="AF">Africa</option>
+      <option value="AU">Austrailia</option>
+      <option value="PC">Pacific Ocean</option>
+      <option value="CA">Canada</option>
+
+
+     </select>
+    </div>
+    <div id="map-canvas" style="width:1000px; height:700px" ></div>
+  </body>
+</html>

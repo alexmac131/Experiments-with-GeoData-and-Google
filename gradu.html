@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  
+
+  <script>
+     
+var blue;
+var green;
+var red;
+var count = 0;
+var gradient = [];
+    for (var rgb = 1; rgb <= 6 ;rgb++) {
+      for (var i =1 ; i < 255 ; i += 4) {
+          count++;
+          switch (rgb) {
+            case 1:
+              red = 0;
+              green = parseInt(i/8);
+              blue = 128 +i;
+              beer = 1;
+              if (blue > 210) {
+                  
+                  continue;
+              }
+              break;
+              
+            case 2:
+              red = 10;
+              green = i;
+              if (green > 210) {
+                continue;
+              }
+              blue = 210 - parseInt(i /3);
+              beer = 2
+              break;
+            case 3:
+              red = 12 + parseInt(i/3);
+              green = 209 - parseInt(i  /5);
+              if (green <= 0) {
+                green = 1;
+                continue;
+              }
+              blue = 100 - parseInt(i / rgb) + 4 ;
+              beer = 3
+              break;
+            case 4:
+              red = 100+ parseInt(i/2);
+              green = 139  +i;
+              if (green >= 255) {
+                green = 255;
+              }
+              blue = 20 - parseInt(i/3);
+              if (blue <= 0) {
+                blue =1;
+              }
+              beer = 4;
+              break;
+            case 5:
+              red = 255;
+              green = 255 - parseInt(i/4);
+              blue = parseInt(i/10);
+              beer = 5;
+              break;
+            case 6:
+              red = 255 ;
+
+              green = 189 -  i;;
+              if (green <= 0) {
+                green = 0;
+                continue;
+              }
+              blue = 0;
+              beer = 6;
+              break;
+
+        }
+      gradient.push('rgba('+  red + ',' +  green + ',' + blue + ',1)');
+            //gradient.push('rgba('+  i + ','+  (255 -i) + ' ,0,1)');
+                 console.log("data " + i )
+    var string = '<div style="background-color:rgb(' + red + ',' + green + ',' + blue + ');width:10;height:10;">ALEX ' + beer + '--> ' + i + ' --   ' +  red + '  --  ' + green + ' --  '+ blue  + '   ' + count + '  </div>';
+    document.write(string);
+        };
+        console.log(gradient);
+  
+  }
+</script>
+  </head>
+  <body>
+    This is a test of my code
+  </body>
+</html>
