@@ -6,3 +6,5 @@ What I found is even more interesting airport location data, crime data, traffic
 
 The Data sources are key as of course is key to any good set of information.  Good examples are open data sites that include GEO Data or has some sort of convertible data set. 
 
+![January 31, 2014](/images/googleCircle.jpg "January 31, 2014 ")
+
