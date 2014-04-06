@@ -8,6 +8,12 @@
       font-family : 'Helvetica Neue', Helvetica, Arial, sans-serif;
       font-size: 1.1em;
     }
+    #datepicker {
+	top:45;
+	right:1;
+	z-index:4;
+	position:fixed;
+    }
     #map-canvas {
       text-align: center;
       padding: 0px;
@@ -233,6 +239,7 @@ function changeCenter() {
 </script>
   </head>
   <body>
+    <div id="datepicker"></div>
     <div  class="panel"><select  id = "areaMap" onchange="changeCenter()" >
       <option value="NA">North America</option>
       <option value="SA">South America</option>
@@ -255,6 +262,6 @@ function changeCenter() {
       <button onclick="changeRadius()">Change radius</button>
       <button onclick="changeOpacity()">Change opacity</button>
     </div>
-    <div id="map-canvas" style="width:1200px; height:700px" ></div>
+    <div id="map-canvas" style="width:1000px; height:700px" ></div>
   </body>
 </html>
