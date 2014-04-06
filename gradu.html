@@ -8,10 +8,10 @@
 var blue;
 var green;
 var red;
-var count = 0;
+var count = -40;
 var gradient = [];
-    for (var rgb = 1; rgb <= 6 ;rgb++) {
-      for (var i =1 ; i < 255 ; i += 4) {
+    for (var rgb = 1; rgb <= 4  ;rgb++) {
+      for (var i =1 ; i < 255 ; i += 7) {
           count++;
           switch (rgb) {
             case 1:
@@ -23,6 +23,7 @@ var gradient = [];
                   
                   continue;
               }
+            
               break;
               
             case 2:
@@ -32,7 +33,8 @@ var gradient = [];
                 continue;
               }
               blue = 210 - parseInt(i /3);
-              beer = 2
+              beer = 2;
+             
               break;
             case 3:
               red = 12 + parseInt(i/3);
@@ -43,26 +45,9 @@ var gradient = [];
               }
               blue = 100 - parseInt(i / rgb) + 4 ;
               beer = 3
+              i += 8;
               break;
             case 4:
-              red = 100+ parseInt(i/2);
-              green = 139  +i;
-              if (green >= 255) {
-                green = 255;
-              }
-              blue = 20 - parseInt(i/3);
-              if (blue <= 0) {
-                blue =1;
-              }
-              beer = 4;
-              break;
-            case 5:
-              red = 255;
-              green = 255 - parseInt(i/4);
-              blue = parseInt(i/10);
-              beer = 5;
-              break;
-            case 6:
               red = 255 ;
 
               green = 189 -  i;;
@@ -70,6 +55,7 @@ var gradient = [];
                 green = 0;
                 continue;
               }
+              i += 5;
               blue = 0;
               beer = 6;
               break;
@@ -78,7 +64,7 @@ var gradient = [];
       gradient.push('rgba('+  red + ',' +  green + ',' + blue + ',1)');
             //gradient.push('rgba('+  i + ','+  (255 -i) + ' ,0,1)');
                  console.log("data " + i )
-    var string = '<div style="background-color:rgb(' + red + ',' + green + ',' + blue + ');width:10;height:10;">ALEX ' + beer + '--> ' + i + ' --   ' +  red + '  --  ' + green + ' --  '+ blue  + '   ' + count + '  </div>';
+    var string = '<div style="background-color:rgb(' + red + ',' + green + ',' + blue + ');width:10;height:10;">' + count +  ' ' + rgb + '  </div>';
     document.write(string);
         };
         console.log(gradient);
