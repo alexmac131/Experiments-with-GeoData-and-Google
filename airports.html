@@ -9,7 +9,7 @@
       font-size: 1.1em;
     }
     #datepicker {
-	top:45;
+f	top:45;
 	right:1;
 	z-index:4;
 	position:fixed;
@@ -45,7 +45,7 @@
 
   <script>
     var map, pointarray, heatmap;
-    var taxiData = [];
+    var airportData = [];
 
     function initialize() {
       var mapOptions = {
@@ -65,14 +65,14 @@
     complete: function (data) {
       infoArray = JSON.parse(data.responseText);
       for (var i = 0; i < infoArray.length; i ++) {
-       taxiData.push(
+       airportData.push(
         {location: 
           new google.maps.LatLng(
             infoArray[i].lat, 
             infoArray[i].lon), 
             weight: 99}
           );
-       console.log(taxiData[i]);
+       console.log(airportData[i]);
 
       }
       
@@ -85,7 +85,7 @@
       console.log("bad shit man");
     }
   });
-  var pointArray = new google.maps.MVCArray(taxiData);
+  var pointArray = new google.maps.MVCArray(airportData);
 
   
 
