@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <style>
+    html, body {  
+      margin: 0px;
+      padding: 0px;
+      font-family : 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-size: 1.1em;
+    }
+    #datepicker {
+f	top:45;
+	right:1;
+	z-index:4;
+	position:fixed;
+    }
+    #map-canvas {
+      text-align: center;
+      padding: 0px;
+      font: inherit;
+    }
+    button  {
+     width:240;
+     font: inherit;
+    }
+    select {
+      text-align: center;
+      font: inherit;
+    }
+    .panel {
+      text-align: center;
+      font: inherit;
+      font-size:.9em ;  
+      top: 5px;        
+      z-index: 5;
+      background-color: #000;
+      padding: 0px;
+      border: 1px solid #000;
+    }
+  </style>
+
+  <script src="js/jquery.js"></script>
+
+  <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=visualization"></script>
+
+  <script>
+    var map, pointarray, heatmap;
+    var airportData = [];
+
+    function initialize() {
+      var mapOptions = {
+        zoom: 1,
+        minzoon: 1,
+        center: new google.maps.LatLng(37.774546, -100.433523),
+        mapTypeId: google.maps.MapTypeId.TERRAN
+      };
+
+      map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+
+  $.ajax({
+    dataType: "json",
+    cache: false,
+    url: "data/airports.json",
+    complete: function (data) {
+      infoArray = JSON.parse(data.responseText);
+      for (var i = 0; i < infoArray.length; i ++) {
+       airportData.push(
+        {location: 
+          new google.maps.LatLng(
+            infoArray[i].lat, 
+            infoArray[i].lon), 
+            weight: 99}
+          );
+       //console.log(airportData[i]);
+
+      }
+      
+    },
+
+    success: function(data) {
+      console.log("we have succcess");
+    },
+    error: function () {
+      console.log("bad shit man");
+    }
+  });
+  var pointArray = new google.maps.MVCArray(airportData);
+
+  
+
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: pointArray,
+    maxIntensity:4,  
+    radius:5,
+    opacity:.92,
+  });
+ var gradient = [
+
+    'rgba(0, 0, 0, 0)',
+    'rgba(0, 0, 125, 1)',
+    
+    'rgba(0, 122, 127, 1)',
+    'rgba(127, 11, 63, 1)',
+    'rgba(191, 0, 31, 1)',
+    'rgba(255, 0, 0, 1)'
+  ]
+  heatmap.set('gradient', heatmap.get('gradient') ? null : gradient);
+  heatmap.setMap(map);
+}
+
+
+ for (var city in airportData) {
+    var populationOptions = {
+      strokeColor: gradient[airportData[city].weight],
+      strokeOpacity: 0.19,
+      strokeWeight: 1,
+      fillColor: gradient[airportData[city].weight],
+      fillOpacity: 0.59,
+      map: map,
+      center: airportData[city].location,
+      radius: 33000
+    };
+    // Add the circle for this city to the map.
+    cityCircle = new google.maps.Circle(populationOptions);
+  }
+
+
+function changeCenter() {
+  var continent = $("#areaMap option:selected").val();
+
+  switch (continent) {
+    case "CA":
+      toggleHeatmap();
+      console.log("beep beep af" );
+      map.setCenter({lat: 59, lng: -93});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break; 
+
+    case "AF":
+      toggleHeatmap();
+      //console.log("beep beep af" );
+      map.setCenter({lat: -5, lng: 30});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break; 
+    case "NA":
+      toggleHeatmap();
+      //console.log("beep beep na" ); 
+      map.setCenter({lat: 60, lng: -90});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;
+    case "SA":
+      toggleHeatmap();
+      //console.log("beep beep sa" ); 
+      map.setCenter({lat: -26, lng: -65});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "EU":
+      toggleHeatmap();
+      //console.log("beep beep eu" );
+      map.setCenter({lat:45, lng: 15});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "JP":
+      toggleHeatmap();
+      //console.log("beep beep eu" );
+      map.setCenter({lat:33, lng: 145});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;  
+    case "AU":
+      toggleHeatmap(); 
+      //console.log("beep beep AU" );   
+      map.setZoom(4) ;
+      map.setCenter({lat: -30, lng: 133});
+      toggleHeatmap();
+      break;
+    case "VE":
+      toggleHeatmap(); 
+      //console.log("beep beep AU" );   
+      map.setZoom(5) ;
+      map.setCenter({lat:12, lng: 113});
+      toggleHeatmap();
+      break;
+    case "PC":
+      toggleHeatmap(); 
+      //console.log("beep beep pc" );   
+      map.setZoom(4) ;
+      map.setCenter({lat: 1, lng: -160});
+      toggleHeatmap();
+      break;
+    case "RU":
+      toggleHeatmap();
+      //console.log("beep beep ru" ); 
+      map.setCenter({lat:55, lng: 67});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "CH":
+      toggleHeatmap();
+      //console.log("beep beep Ch" ); 
+      map.setCenter({lat: 38, lng: 110});
+      map.setZoom(4) ;
+      toggleHeatmap();
+      break;
+    case "ID":
+      toggleHeatmap();
+      //console.log("beep beep ME" ); 
+      map.setCenter({lat: 20, lng: 88});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;
+    case "ME":
+      toggleHeatmap();
+      //console.log("beep beep ME" ); 
+      map.setCenter({lat: 25, lng: 33});
+      map.setZoom(5) ;
+      toggleHeatmap();
+      break;
+    default:
+      //console.log("bad karma");
+
+  }
+
+      
+ 
+}
+  google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+  </head>
+  <body>
+    
+    <div  class="panel"><select  id = "areaMap" onchange="changeCenter()" >
+      <option value="NA">North America</option>
+      <option value="SA">South America</option>
+      <option value="EU">Europe</option>
+      <option value="RU">Russia</option> 
+      <option value="ID">India</option>     
+      <option value="CH">China</option>
+      <option value="JP">Japan</option>
+       <option value="VE">Indo-China</option>
+      <option value="ME">Middle East</option>
+      <option value="AF">Africa</option>
+      <option value="AU">Austrailia</option>
+      <option value="PC">Pacific Ocean</option>
+      <option value="CA">Canada</option>
+
+
+     </select>
+    </div>
+    <div id="map-canvas" style="width:1000px; height:700px" ></div>
+  </body>
+</html>
